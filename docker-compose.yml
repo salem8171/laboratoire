@@ -1,0 +1,34 @@
+version: '3'
+services: 
+  laboratoire-angular:
+    build: 
+      context: laboratoire-angular
+      dockerfile: dev.Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - /app/node_modules
+      - ./laboratoire-angular:/app
+  laboratoire-spring:
+    restart: always
+    build:
+      context: laboratoire-spring
+      dockerfile: dev.Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./laboratoire-spring:/app
+  mariadb:
+    image: mariadb
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD='yes'
+      - MYSQL_DATABASE=laboratoire
+    ports:
+      - "3306:3306"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - PMA_HOST=mariadb
